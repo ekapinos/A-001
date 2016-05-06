@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>local.kapinos.a-101-Spring-in-Action</groupId>
-    <artifactId>parent-project</artifactId>
+    <artifactId>Spring-in-Action</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>17-Messaging-in-Spring</artifactId>
