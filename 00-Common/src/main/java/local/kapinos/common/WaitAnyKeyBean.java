@@ -1,15 +1,23 @@
 package local.kapinos.common;
 
-import java.io.IOException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
 public class WaitAnyKeyBean {
 
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
     @EventListener({ContextRefreshedEvent.class})
-    void contextRefreshedEvent() throws IOException {
-		System.out.print("Press any key ...");
-		System.in.read();
+    private void contextRefreshedEvent() throws Exception {
+		logger.info("###############################################");
+		logger.info("####     Press any key for shutdown ...    ####");
+		logger.info("###############################################");
+		System.in.read();		
+		logger.info("###############################################");
+		logger.info("####              Shutdown ...             ####");
+		logger.info("###############################################");
 	}
+
 }
