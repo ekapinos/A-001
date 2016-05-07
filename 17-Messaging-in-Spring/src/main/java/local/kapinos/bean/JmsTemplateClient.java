@@ -22,9 +22,9 @@ public class JmsTemplateClient {
 	public void start() throws JMSException {
 		logger.info("JmsTemplate JMS Client start");
 		
-		logger.info("  - Send Hello jmsTemplate!");
+		logger.info("  - Send Hello Topic!");
 
-		jmsTemplate.convertAndSend(testTopic, new JmsTemplateMessage("Hello jmsTemplate!"));
+		jmsTemplate.convertAndSend(testTopic, new JmsTemplateMessage("Hello Topic!"));
 
 		logger.info("JmsTemplate JMS Client stop");
 	}

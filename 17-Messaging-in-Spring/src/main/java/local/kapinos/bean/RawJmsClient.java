@@ -31,14 +31,14 @@ public class RawJmsClient {
 		Session session = null;
 		try {
 			
-			logger.info(" - Send Hello world!");
+			logger.info(" - Send Hello Queue!");
 			
 			conn = cf.createConnection();
 			session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			Destination destination = testQueue;
 			MessageProducer producer = session.createProducer(destination);
 			TextMessage message = session.createTextMessage();
-			message.setText("Hello world!");
+			message.setText("Hello Queue!");
 			producer.send(message);
 		} finally {
 			if (session != null) {

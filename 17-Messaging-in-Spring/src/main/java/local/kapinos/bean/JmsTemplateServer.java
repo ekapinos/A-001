@@ -5,8 +5,6 @@ import java.io.EOFException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 import org.slf4j.Logger;
