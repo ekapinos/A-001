@@ -24,9 +24,7 @@ public class JmsTemplateClient {
 		
 		logger.info("  - Send Hello jmsTemplate!");
 
-		jmsTemplate.send(testTopic, session -> {
-			return session.createTextMessage("Hello jmsTemplate!");
-		});
+		jmsTemplate.convertAndSend(testTopic, new JmsTemplateMessage("Hello jmsTemplate!"));
 
 		logger.info("JmsTemplate JMS Client stop");
 	}

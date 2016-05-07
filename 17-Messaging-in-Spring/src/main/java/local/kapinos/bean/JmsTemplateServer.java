@@ -1,5 +1,7 @@
 package local.kapinos.bean;
 
+import java.io.EOFException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jms.JMSException;
@@ -30,13 +32,13 @@ public class JmsTemplateServer {
 		workThread = new Thread(() -> {
 			while (!workThread.isInterrupted()) {
 				try {
-					Message message = jmsTemplate.receive(testTopic);
-					TextMessage textMessage = (TextMessage) message;
+					JmsTemplateMessage message = (JmsTemplateMessage)jmsTemplate.receiveAndConvert(testTopic);
 
-					logger.info("GOT A MESSAGE: {}", textMessage.getText());
+					logger.info("GOT A MESSAGE: {}", message.getText());
 
 				} catch (Exception e) {
-					if (e.getCause() instanceof InterruptedException) {
+					if (e.getCause() instanceof JMSException && 
+						e.getCause().getCause() instanceof EOFException) {
 						break;
 					}
 					throw new RuntimeException(e);
