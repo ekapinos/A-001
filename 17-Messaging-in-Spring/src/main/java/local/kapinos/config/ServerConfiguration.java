@@ -4,6 +4,8 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 
 import org.apache.activemq.broker.BrokerService;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +22,14 @@ import local.kapinos.bean._01.RawJmsServer;
 import local.kapinos.bean._02.JmsListenerServer;
 import local.kapinos.bean._02.JmsTemplateServer;
 import local.kapinos.bean._03.RemotingJmsServer;
+import local.kapinos.bean._04.AmpqListenerServer;
 import local.kapinos.bean._04.AmqpTemplateServer;
 import local.kapinos.common.RemotingJmsService;
 import local.kapinos.common.WaitAnyKeyBean;
 
 @Configuration
 @EnableJms // for @JmsListener annotation
+@EnableRabbit
 @Import({CommonJmsConfiguration.class, 
 	     CommonAmqpConfiguration.class})
 public class ServerConfiguration {
@@ -99,6 +103,22 @@ public class ServerConfiguration {
 		return new AmqpTemplateServer();
 	}
 	
+	@Bean
+	@DependsOn("amqpConnectionFactory")
+	public AmpqListenerServer ampqListenerServer(){
+		return new AmpqListenerServer();
+	}
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+    		org.springframework.amqp.rabbit.connection.ConnectionFactory amqpConnectionFactory) {
+    	
+      SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+      factory.setConnectionFactory(amqpConnectionFactory);
+      factory.setMaxConcurrentConsumers(5);
+      
+      return factory;
+    }
+
 	@Bean
 	Object waitAnyKeyBean() {
 		return new WaitAnyKeyBean();

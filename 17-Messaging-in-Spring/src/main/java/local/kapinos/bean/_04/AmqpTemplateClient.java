@@ -24,6 +24,7 @@ public class AmqpTemplateClient {
 		logger.info("  - Send Hello AmqpTemplate!");
 
 		amqpTemplate.convertAndSend(new MessageHolder("Hello AmqpTemplate!"));
+		amqpTemplate.convertAndSend("amqpQueue1" , new MessageHolder("Hello AmqpTemplate1!"));
 
 		logger.info("AmqpTemplate JMS Client stop");
 	}
