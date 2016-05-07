@@ -30,5 +30,16 @@
 			<artifactId>activemq-core</artifactId>
 			<version>5.7.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit</artifactId>
+			<version>1.5.6.RELEASE</version>
+		</dependency>
 	</dependencies>
 </project>

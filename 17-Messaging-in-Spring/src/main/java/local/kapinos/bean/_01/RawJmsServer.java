@@ -1,4 +1,4 @@
-package local.kapinos.bean;
+package local.kapinos.bean._01;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

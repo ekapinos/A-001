@@ -1,6 +1,4 @@
-package local.kapinos.bean;
-
-import java.io.EOFException;
+package local.kapinos.bean._02;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -12,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
-import local.kapinos.common.JmsMessageHolder;
+import local.kapinos.common.MessageHolder;
 
 public class JmsTemplateServer {
 
@@ -32,13 +30,13 @@ public class JmsTemplateServer {
 		workThread = new Thread(() -> {
 			while (!workThread.isInterrupted()) {
 				try {
-					JmsMessageHolder message = (JmsMessageHolder)jmsTemplate.receiveAndConvert(testTopic);
+					MessageHolder message = (MessageHolder)jmsTemplate.receiveAndConvert(testTopic);
 
 					logger.info("GOT A MESSAGE: {}", message.getText());
 
 				} catch (Exception e) {
 					if (e.getCause() instanceof JMSException && 
-						e.getCause().getCause() instanceof EOFException) {
+						e.getCause().getCause() instanceof InterruptedException) {
 						break;
 					}
 					throw new RuntimeException(e);
@@ -52,5 +50,7 @@ public class JmsTemplateServer {
 	@PreDestroy
 	public void stop() throws JMSException {
 		logger.info("JmsTemplate Server stop");
+		
+		workThread.interrupt();
 	}
 }

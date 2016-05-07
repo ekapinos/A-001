@@ -16,16 +16,18 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.remoting.JmsInvokerServiceExporter;
 import org.springframework.jms.support.destination.BeanFactoryDestinationResolver;
 
-import local.kapinos.bean.JmsListenerServer;
-import local.kapinos.bean.JmsTemplateServer;
-import local.kapinos.bean.RawJmsServer;
-import local.kapinos.bean.RemotingJmsServer;
+import local.kapinos.bean._01.RawJmsServer;
+import local.kapinos.bean._02.JmsListenerServer;
+import local.kapinos.bean._02.JmsTemplateServer;
+import local.kapinos.bean._03.RemotingJmsServer;
+import local.kapinos.bean._04.AmqpTemplateServer;
 import local.kapinos.common.RemotingJmsService;
 import local.kapinos.common.WaitAnyKeyBean;
 
 @Configuration
 @EnableJms // for @JmsListener annotation
-@Import(CommonConfiguration.class)
+@Import({CommonJmsConfiguration.class, 
+	     CommonAmqpConfiguration.class})
 public class ServerConfiguration {
 
 	@Bean(destroyMethod = "stop")
@@ -38,17 +40,22 @@ public class ServerConfiguration {
 	}
 
 	@Bean(destroyMethod = "stop")
-	@DependsOn("embeddedBroker")
+	@DependsOn({"embeddedBroker", "connectionFactory"})
 	public RawJmsServer rawJmsServer() {
 		return new RawJmsServer();
 	}
 
 	@Bean(destroyMethod = "stop")
-	@DependsOn("embeddedBroker")
+	@DependsOn({"embeddedBroker", "connectionFactory"})
 	public JmsTemplateServer jmsTemplateServer() {
 		return new JmsTemplateServer();
 	}
 
+	@Bean
+	@DependsOn("embeddedBroker")
+	public JmsListenerServer jmsListenerServer() {
+		return new JmsListenerServer();
+	}
 	@Bean
 	public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory cf, BeanFactory bf) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
@@ -59,13 +66,9 @@ public class ServerConfiguration {
 
 		return factory;
 	}
-	@Bean
-	@DependsOn("embeddedBroker")
-	public JmsListenerServer jmsListenerServer() {
-		return new JmsListenerServer();
-	}
 	
 	@Bean
+	@DependsOn("embeddedBroker")
 	public RemotingJmsServer remotingServerImpl() {
 		return new RemotingJmsServer();
 	}
@@ -78,7 +81,6 @@ public class ServerConfiguration {
 		return exporter;
 	}
 	@Bean
-	@DependsOn("embeddedBroker")
 	public DefaultMessageListenerContainer jmsInvokerServiceExporterContainer(ConnectionFactory connectionFactory,
 			@Qualifier("remotingQueue") Queue remotingQueue,
 			JmsInvokerServiceExporter jmsInvokerServiceExporter) {
@@ -89,6 +91,12 @@ public class ServerConfiguration {
 		container.setMessageListener(jmsInvokerServiceExporter);
 		
 		return container;
+	}
+	
+	@Bean
+	@DependsOn("amqpConnectionFactory")
+	public AmqpTemplateServer amqpTemplateServer(){
+		return new AmqpTemplateServer();
 	}
 	
 	@Bean

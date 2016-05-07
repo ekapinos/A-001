@@ -1,4 +1,4 @@
-package local.kapinos.bean;
+package local.kapinos.bean._03;
 
 import javax.annotation.PostConstruct;
 
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import local.kapinos.common.JmsMessageHolder;
+import local.kapinos.common.MessageHolder;
 import local.kapinos.common.RemotingJmsService;
 
 public class RemotingJmsClient {
@@ -22,7 +22,7 @@ public class RemotingJmsClient {
 		
 		logger.info("  - Send Hello Remoting JMS Service!");
 
-		remotingJmsService.printMessage(new JmsMessageHolder("Hello Remoting JMS Service!"));
+		remotingJmsService.printMessage(new MessageHolder("Hello Remoting JMS Service!"));
 
 		logger.info("Remoting JMS Service Client stop");
 	}

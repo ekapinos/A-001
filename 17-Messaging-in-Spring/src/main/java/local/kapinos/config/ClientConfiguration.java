@@ -9,13 +9,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jms.remoting.JmsInvokerProxyFactoryBean;
 
-import local.kapinos.bean.JmsTemplateClient;
-import local.kapinos.bean.RawJmsClient;
-import local.kapinos.bean.RemotingJmsClient;
+import local.kapinos.bean._01.RawJmsClient;
+import local.kapinos.bean._02.JmsTemplateClient;
+import local.kapinos.bean._03.RemotingJmsClient;
+import local.kapinos.bean._04.AmqpTemplateClient;
 import local.kapinos.common.RemotingJmsService;
 
 @Configuration
-@Import(CommonConfiguration.class)
+@Import({CommonJmsConfiguration.class, 
+         CommonAmqpConfiguration.class})
 public class ClientConfiguration {
 
 	@Bean
@@ -41,5 +43,10 @@ public class ClientConfiguration {
 	@Bean
 	public RemotingJmsClient remotingJmsClient() {
 		return new RemotingJmsClient();
+	}
+	
+	@Bean
+	public AmqpTemplateClient amqpTemplateClient(){
+		return new AmqpTemplateClient();
 	}
 }

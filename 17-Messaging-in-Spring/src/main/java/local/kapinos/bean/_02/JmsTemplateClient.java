@@ -1,4 +1,4 @@
-package local.kapinos.bean;
+package local.kapinos.bean._02;
 
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
-import local.kapinos.common.JmsMessageHolder;
+import local.kapinos.common.MessageHolder;
 
 public class JmsTemplateClient {
 
@@ -26,7 +26,7 @@ public class JmsTemplateClient {
 		
 		logger.info("  - Send Hello Topic!");
 
-		jmsTemplate.convertAndSend(testTopic, new JmsMessageHolder("Hello Topic!"));
+		jmsTemplate.convertAndSend(testTopic, new MessageHolder("Hello Topic!"));
 
 		logger.info("JmsTemplate JMS Client stop");
 	}

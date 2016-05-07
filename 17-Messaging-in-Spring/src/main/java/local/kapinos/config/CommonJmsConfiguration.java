@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
-public class CommonConfiguration {
+public class CommonJmsConfiguration {
 
 	@Bean
 	public ConnectionFactory connectionFactory() throws Exception{
@@ -40,6 +40,4 @@ public class CommonConfiguration {
 	public Queue remotingQueue(){
 		return new ActiveMQQueue("remotingQueue");
 	}
-	
-
 }
