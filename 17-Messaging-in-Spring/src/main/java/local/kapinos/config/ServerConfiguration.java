@@ -1,14 +1,12 @@
 package local.kapinos.config;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
-
 import org.apache.activemq.broker.BrokerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
+import local.kapinos.bean.JmsTemplateServer;
 import local.kapinos.bean.RawJmsServer;
 import local.kapinos.common.WaitAnyKeyBean;
 
@@ -28,8 +26,14 @@ public class ServerConfiguration {
 	
 	@Bean(destroyMethod="stop")
 	@DependsOn("embeddedBroker")
-	public RawJmsServer rawJmsClient(ConnectionFactory cf, Queue testQueue) {
+	public RawJmsServer rawJmsServer() {
 		return new RawJmsServer();
+	}
+	
+	@Bean(destroyMethod="stop")
+	@DependsOn("embeddedBroker")
+	public JmsTemplateServer jmsTemplateServer() {
+		return new JmsTemplateServer();
 	}
 	
 	@Bean

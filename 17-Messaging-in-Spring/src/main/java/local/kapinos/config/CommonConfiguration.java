@@ -9,6 +9,7 @@ import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.activemq.spring.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
 public class CommonConfiguration {
@@ -28,5 +29,10 @@ public class CommonConfiguration {
 	@Bean
 	public Topic testTopic(){
 		return new ActiveMQTopic("testTopic");
+	}
+	
+	@Bean
+	public JmsTemplate jmsTemplate(ConnectionFactory cf){
+		return new JmsTemplate(cf);
 	}
 }
