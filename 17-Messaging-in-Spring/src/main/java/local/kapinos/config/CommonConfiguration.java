@@ -35,4 +35,11 @@ public class CommonConfiguration {
 	public JmsTemplate jmsTemplate(ConnectionFactory cf){
 		return new JmsTemplate(cf);
 	}
+	
+	@Bean
+	public Queue remotingQueue(){
+		return new ActiveMQQueue("remotingQueue");
+	}
+	
+
 }

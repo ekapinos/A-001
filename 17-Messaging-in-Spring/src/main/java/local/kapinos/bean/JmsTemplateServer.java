@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
+import local.kapinos.common.JmsMessageHolder;
+
 public class JmsTemplateServer {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -30,7 +32,7 @@ public class JmsTemplateServer {
 		workThread = new Thread(() -> {
 			while (!workThread.isInterrupted()) {
 				try {
-					JmsTemplateMessage message = (JmsTemplateMessage)jmsTemplate.receiveAndConvert(testTopic);
+					JmsMessageHolder message = (JmsMessageHolder)jmsTemplate.receiveAndConvert(testTopic);
 
 					logger.info("GOT A MESSAGE: {}", message.getText());
 

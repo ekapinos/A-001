@@ -44,9 +44,15 @@ public class RawJmsServer {
 				try {
 
 					Message message = consumer.receive();
-					TextMessage textMessage = (TextMessage) message;
 
-					logger.info("GOT A MESSAGE: {}", textMessage.getText());
+					TextMessage textMessage = (TextMessage) message;
+					
+					if (message == null){
+						logger.info("GOT A NULL MESSAGE"); // Appears on shutdown
+					}
+					else {
+						logger.info("GOT A MESSAGE: {}", textMessage.getText());
+					}
 
 				} catch (Exception e) {
 					if (e.getCause() instanceof InterruptedException) {

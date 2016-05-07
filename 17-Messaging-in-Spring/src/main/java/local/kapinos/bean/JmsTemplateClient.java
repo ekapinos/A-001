@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
+import local.kapinos.common.JmsMessageHolder;
+
 public class JmsTemplateClient {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -24,7 +26,7 @@ public class JmsTemplateClient {
 		
 		logger.info("  - Send Hello Topic!");
 
-		jmsTemplate.convertAndSend(testTopic, new JmsTemplateMessage("Hello Topic!"));
+		jmsTemplate.convertAndSend(testTopic, new JmsMessageHolder("Hello Topic!"));
 
 		logger.info("JmsTemplate JMS Client stop");
 	}

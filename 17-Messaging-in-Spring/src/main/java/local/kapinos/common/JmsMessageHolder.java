@@ -1,14 +1,14 @@
-package local.kapinos.bean;
+package local.kapinos.common;
 
 import java.io.Serializable;
 
-public class JmsTemplateMessage implements Serializable{
+public class JmsMessageHolder implements Serializable{
 	
 	private static final long serialVersionUID = 4892147525311196514L;
 	
 	private String text;
 	
-	JmsTemplateMessage(String text){
+	public JmsMessageHolder(String text){
 		this.text = text;
 	}
 	
