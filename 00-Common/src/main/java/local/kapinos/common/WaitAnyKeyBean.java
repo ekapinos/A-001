@@ -14,9 +14,9 @@ public class WaitAnyKeyBean {
 		logger.info("###############################################");
 		logger.info("####     Press any key for shutdown ...    ####");
 		logger.info("###############################################");
-		System.in.read();		
+		System.in.read();	// block main thread	
 		logger.info("###############################################");
-		logger.info("####              Shutdown ...             ####");
+		logger.info("####          Is shutting down ...         ####");
 		logger.info("###############################################");
 	}
 
