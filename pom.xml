@@ -10,6 +10,7 @@
 		<module>17-Messaging-in-Spring</module>
 		<module>00-Common</module>
 		<module>18-Messaging-with-WebSoket-and-STOMP</module>
+		<module>19-Sending-mail-with-Spring</module>
 	</modules>
 
 	<properties>
