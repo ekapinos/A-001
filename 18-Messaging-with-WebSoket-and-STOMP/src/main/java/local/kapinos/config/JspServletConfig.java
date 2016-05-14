@@ -1,18 +1,14 @@
 package local.kapinos.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import local.kapinos.controller.StompController;
-
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackageClasses = { StompController.class})
 public class JspServletConfig extends WebMvcConfigurerAdapter {
 	
 	@Bean

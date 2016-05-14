@@ -2,30 +2,41 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Socket Demo</title>
+	<title>Web Socket Demo</title>
 	<script src="resources/jquery-2.2.3.js"></script>
 	<script src="resources/sockjs-1.1.0.js"></script>
+	<script src="resources/stomp.js"></script>
 </head>
 
 <body>
-	<h1>Web socket test.</h1>
+	<h1>Web Socket Demo</h1>
 	<p>	
-	<button id='rawWebSocketTest'>Start RAW WebSocket test</button>
+	<button id='rawWebSocketTest'>Start Raw WebSocket test</button>
 	<button id='sockJsTest'>Start SockJS test</button>
+	<span> </span>
 	<button id='stopAll'>Stop All</button>
 	<p>
-	<textarea id='testLog' rows='30' cols='50' readonly>Log will be here</textarea>
+	<button id='stompTest'>Start STOMP test</button>
+	<p>
+	<textarea id='testLog' rows='30' cols='100' readonly>Log will be here</textarea>
 </body>
 
 <script>
 $( document ).ready(function() {
 
 	function logPrintln(arg) {
-		$ ('#testLog').val($ ('#testLog').val() + '\n' + arg);
+		$ ('#testLog').val($ ('#testLog').val() + arg + '\n');
+	};
+	function logClean() {
+		$ ('#testLog').val('');
 	};
 	
+	var socketConnections = [];	
 	function configureSocket(sock){
-		var timeoutFuture = null;
+		logClean();
+		
+		var timeoutFuture = null; // closure
+		
 		function sayMarco() {
 			logPrintln('Sending Marco!');
 			sock.send("Marco!");						
@@ -44,32 +55,81 @@ $( document ).ready(function() {
 			logPrintln('Closing');
 			clearTimeout(timeoutFuture);
 		};
+		socketConnections.push(sock);
 	};
 
-	var webSockets = [];	
-	var sockJsSockets = [];	
-	
+
 	$ ('#rawWebSocketTest').click(function() {
 		sock = new WebSocket('ws://' + window.location.host + '/spring/raw-web-socket/marco');			
 		configureSocket(sock);
-		webSockets.push(sock);
     });
-	
 	$ ('#sockJsTest').click(function() {
 		sock = new SockJS('/spring/sockjs/marco');			
 		configureSocket(sock);
-		sockJsSockets.push(sock);
     });
-	
 	$ ('#stopAll').click(function() {
-		for (var i = 0; i < webSockets.length; i++){
-			webSockets[i].close();
+		for (var i = 0; i < socketConnections.length; i++){
+			socketConnections[i].close();
 		}
-		for (var i = 0; i < sockJsSockets.length; i++){
-			sockJsSockets[i].close();
+		socketConnections = [];
+	});
+	
+	$ ('#stompTest').click(function(){
+		logClean();
+		
+		var sock = new SockJS('/spring/stomp/marcopolo');
+		var stomp = Stomp.over(sock);
+		
+		function createSendTask(destination){
+			return function(){
+				var payload = JSON.stringify({ 'message': 'Client message!' });
+				
+				logPrintln('Send ' + destination + ' message');
+				stomp.send(destination, {}, payload);	
+			};
 		}
-		webSockets = [];
-		sockJsSockets = [];
+		
+		function subscribeWithCallback(destination){
+			logPrintln('Subscribe ' + destination);
+			stomp.subscribe(destination, function(message) {
+				logPrintln('Received ' + destination + ' message: '+ message.body);
+			});
+		}
+		
+		var executionStack = [
+            createSendTask('/app/marco'),
+            createSendTask('/topic/marco'),
+            createSendTask('/queue/marco'),
+			function(){
+            	subscribeWithCallback('/app/marco');
+			},
+			function(){
+				logPrintln('Disconnect');
+				stomp.disconnect(function(){
+					logPrintln('Disconnected');
+				});
+			}];
+		
+		function executeNextTask(){
+			var taskFunction = executionStack[0];
+			
+			taskFunction();
+			
+			executionStack.shift();
+			if (executionStack.length > 0) {
+				setTimeout(executeNextTask, 2000);
+			}
+		};
+		
+		logPrintln('Connect');
+		stomp.connect('guest', 'guest', function(frame) {
+			logPrintln('Connected');
+			
+			subscribeWithCallback('/topic/marco');
+			subscribeWithCallback('/queue/marco');
+
+			executeNextTask();
+		});
 	});
 });
 </script>
