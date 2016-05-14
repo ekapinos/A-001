@@ -104,6 +104,7 @@ $( document ).ready(function() {
             	subscribeWithCallback('/app/marco');
 			},
 			createSendTask('/app/this-user-only'),
+			createSendTask('/app/generate-remote-exception'),
 			function(){
 				logPrintln('Disconnect');
 				stomp.disconnect(function(){
@@ -129,6 +130,7 @@ $( document ).ready(function() {
 			subscribeWithCallback('/topic/marco');
 			subscribeWithCallback('/queue/marco');
 			subscribeWithCallback('/user/queue/secured');
+			subscribeWithCallback('/queue/remote-exceptions');
 
 			executeNextTask();
 		});

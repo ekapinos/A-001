@@ -3,7 +3,9 @@ package local.kapinos.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
@@ -50,5 +52,19 @@ public class StompController {
 		Shout outgoing = new Shout();
 		outgoing.setMessage("@SendToUser return value");
 		return outgoing;
+	}
+	
+	@MessageMapping("/generate-remote-exception")
+	public void handleGenerateException() {
+		logger.info("Received STOMP generate remote exception request");
+		
+		throw new IllegalArgumentException("Dummy Remote exception");
+	}
+	
+	@MessageExceptionHandler(IllegalArgumentException.class)
+	@SendTo("/queue/remote-exceptions")
+	public Object handleExceptions(Throwable t) {		
+		logger.error("Error handling message: " + t.getMessage());
+		return t.getMessage(); // or template.convertAndSend("/queue/remote-exceptions", t.getMessage());
 	}
 }
