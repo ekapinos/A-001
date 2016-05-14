@@ -82,7 +82,7 @@ $( document ).ready(function() {
 		
 		function createSendTask(destination){
 			return function(){
-				var payload = JSON.stringify({ 'message': 'Client message!' });
+				var payload = JSON.stringify({ 'message': 'Client message to '+destination+'!' });
 				
 				logPrintln('Send ' + destination + ' message');
 				stomp.send(destination, {}, payload);	
@@ -103,6 +103,7 @@ $( document ).ready(function() {
 			function(){
             	subscribeWithCallback('/app/marco');
 			},
+			createSendTask('/app/this-user-only'),
 			function(){
 				logPrintln('Disconnect');
 				stomp.disconnect(function(){
@@ -127,6 +128,7 @@ $( document ).ready(function() {
 			
 			subscribeWithCallback('/topic/marco');
 			subscribeWithCallback('/queue/marco');
+			subscribeWithCallback('/user/queue/secured');
 
 			executeNextTask();
 		});

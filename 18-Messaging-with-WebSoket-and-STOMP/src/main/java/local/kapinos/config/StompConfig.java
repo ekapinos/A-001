@@ -23,5 +23,6 @@ public class StompConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker("/queue", "/topic");
 		registry.setApplicationDestinationPrefixes("/app");
+		registry.setUserDestinationPrefix("/user"); 
 	}
 }
