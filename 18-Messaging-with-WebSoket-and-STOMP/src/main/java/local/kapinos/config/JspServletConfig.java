@@ -8,12 +8,12 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import local.kapinos.controller.MainController;
+import local.kapinos.controller.StompController;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackageClasses = { MainController.class})
-public class ServletConfig extends WebMvcConfigurerAdapter {
+@ComponentScan(basePackageClasses = { StompController.class})
+public class JspServletConfig extends WebMvcConfigurerAdapter {
 	
 	@Bean
 	public InternalResourceViewResolver viewResolver() {

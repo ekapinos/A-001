@@ -2,9 +2,10 @@ package local.kapinos;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import local.kapinos.config.RawWebSocketConfig;
 import local.kapinos.config.RootConfig;
-import local.kapinos.config.ServletConfig;
-import local.kapinos.config.ServletWebSocketConfig;
+import local.kapinos.config.SockJsConfig;
+import local.kapinos.config.StompConfig;
 
 public class WebXML extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -15,11 +16,14 @@ public class WebXML extends AbstractAnnotationConfigDispatcherServletInitializer
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class<?>[] { ServletConfig.class, ServletWebSocketConfig.class };
+		return new Class<?>[] { //JspServletConfig.class,
+			                    RawWebSocketConfig.class,
+			                    SockJsConfig.class,
+			                    StompConfig.class };
 	}
 
 	@Override
 	protected String[] getServletMappings() {
-		return new String[] { "/" };
+		return new String[] { "/spring/*" };
 	}
 }

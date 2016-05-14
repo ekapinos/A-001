@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Socket Demo</title>
+	<script src="resources/jquery-2.2.3.js"></script>
+	<script src="resources/sockjs-1.1.0.js"></script>
+</head>
+
+<body>
+	<h1>Web socket test.</h1>
+	<p>	
+	<button id='rawWebSocketTest'>Start RAW WebSocket test</button>
+	<button id='sockJsTest'>Start SockJS test</button>
+	<button id='stopAll'>Stop All</button>
+	<p>
+	<textarea id='testLog' rows='30' cols='50' readonly>Log will be here</textarea>
+</body>
+
+<script>
+$( document ).ready(function() {
+
+	function logPrintln(arg) {
+		$ ('#testLog').val($ ('#testLog').val() + '\n' + arg);
+	};
+	
+	function configureSocket(sock){
+		var timeoutFuture = null;
+		function sayMarco() {
+			logPrintln('Sending Marco!');
+			sock.send("Marco!");						
+		}
+		sock.onopen = function() {
+			logPrintln('Opening');
+			sayMarco();
+		};
+		sock.onmessage = function(e) {
+			logPrintln('Received message: '+ e.data);
+			timeoutFuture = setTimeout(function() {
+				sayMarco()
+			}, 2000);
+		};
+		sock.onclose = function() {
+			logPrintln('Closing');
+			clearTimeout(timeoutFuture);
+		};
+	};
+
+	var webSockets = [];	
+	var sockJsSockets = [];	
+	
+	$ ('#rawWebSocketTest').click(function() {
+		sock = new WebSocket('ws://' + window.location.host + '/spring/raw-web-socket/marco');			
+		configureSocket(sock);
+		webSockets.push(sock);
+    });
+	
+	$ ('#sockJsTest').click(function() {
+		sock = new SockJS('/spring/sockjs/marco');			
+		configureSocket(sock);
+		sockJsSockets.push(sock);
+    });
+	
+	$ ('#stopAll').click(function() {
+		for (var i = 0; i < webSockets.length; i++){
+			webSockets[i].close();
+		}
+		for (var i = 0; i < sockJsSockets.length; i++){
+			sockJsSockets[i].close();
+		}
+		webSockets = [];
+		sockJsSockets = [];
+	});
+});
+</script>
+</html>
