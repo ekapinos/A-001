@@ -3,6 +3,7 @@ package local.kapinos.beans;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -39,10 +40,17 @@ public class MimeMailSenderBean {
 
 		helper.setTo(toAddress);
 		helper.setSubject("New Mime message from Spring " + LocalDateTime.now());
-		helper.setText("Mime Text");
+		helper.setText("<html><body>"
+				+ "<h4>Mime Text</h4>"
+				+ "<img src='cid:coupon.jpg'>"
+				+ "<h4>Text end</h4>"
+				+ "</body></html>", true);
 		
 		InputStreamSource couponImage = new ClassPathResource("coupon.jpg");
-		helper.addAttachment("Coupon.png", couponImage);	
+		helper.addInline("coupon.jpg", couponImage, "image/jpg");	
+		
+		InputStreamSource attachmentImage = new ClassPathResource("attachment.jpg");
+		helper.addAttachment("attachment.png", attachmentImage);	
 		
 		mailSender.send(message);
 		
