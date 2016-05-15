@@ -11,6 +11,7 @@
 		<module>00-Common</module>
 		<module>18-Messaging-with-WebSoket-and-STOMP</module>
 		<module>19-Sending-mail-with-Spring</module>
+		<module>20-JMX</module>
 	</modules>
 
 	<properties>
