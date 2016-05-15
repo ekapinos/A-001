@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<h4>${header}</h4>
+		<img src='cid:${inlineimage}'>
+		<h4>${footer}</h4>
+	</body>
+</html>

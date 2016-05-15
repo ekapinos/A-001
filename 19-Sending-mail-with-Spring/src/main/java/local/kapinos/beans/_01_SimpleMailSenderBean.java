@@ -13,7 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SimpleMailSenderBean {
+public class _01_SimpleMailSenderBean {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
