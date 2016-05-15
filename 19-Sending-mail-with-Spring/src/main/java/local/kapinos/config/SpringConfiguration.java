@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import local.kapinos.beans.MailSenderBean;
+import local.kapinos.beans.SimpleMailSenderBean;
 
 /**
  * Run with 
@@ -18,16 +18,17 @@ import local.kapinos.beans.MailSenderBean;
  * -Dusername=piter -Dpassword=piter-pass -DsendTo=piter@gmail.com
  */
 @Configuration
-@ComponentScan(basePackageClasses = MailSenderBean.class)
+@ComponentScan(basePackageClasses = SimpleMailSenderBean.class)
 public class SpringConfiguration {
+	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyConfigIn() {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 
 	@Bean
-	public MailSender mailSender(
-			@Value("${username}") String username,
+	public JavaMailSender mailSender(
+			@Value("${username}") String username, 
 			@Value("${password}") String password) {
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -39,7 +40,7 @@ public class SpringConfiguration {
 		mailSender.setProtocol("smtp");
 		
 		Properties properties = new Properties();
-		properties.setProperty("mail.debug", "true");
+		//properties.setProperty("mail.debug", "true");
 
 		properties.setProperty("mail.smtp.auth", "true");
 		properties.setProperty("mail.smtp.starttls.enable", "true");
@@ -49,5 +50,5 @@ public class SpringConfiguration {
 		
 		return mailSender;
 	}
-
+	
 }
