@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class _01_RemoteJmxClient {
+public class _01_RawRemoteJmxClient {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -20,7 +20,7 @@ public class _01_RemoteJmxClient {
 
 	@PostConstruct
 	public void start() throws Exception {
-		logger.info("Remote JMX Client start");
+		logger.info("Raw Remote JMX Client start");
 
 		mbeanServerConnection.queryNames(null, null)
 		                     .forEach(name -> logger.info(" - " + name));
@@ -28,15 +28,13 @@ public class _01_RemoteJmxClient {
 		
 		int intValue = (Integer) mbeanServerConnection.getAttribute(
 				new ObjectName("myFolder:name=_03_ExposingByAnnotationsBean"), "IntValue");
-		
 		logger.info("GET _03_ExposingByAnnotationsBean.intValue=" + intValue);
-		
-		logger.info("SET _03_ExposingByAnnotationsBean.intValue=" + ++intValue);
-		
+				
 		mbeanServerConnection.setAttribute(
 				new ObjectName("myFolder:name=_03_ExposingByAnnotationsBean"), 
 				new Attribute("IntValue", intValue));
+		logger.info("SET _03_ExposingByAnnotationsBean.intValue=" + ++intValue);
 		
-		logger.info("Remote JMX Client stop");
+		logger.info("Raw Remote JMX Client stop");
 	}
 }
