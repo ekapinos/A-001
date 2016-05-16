@@ -1,4 +1,4 @@
-package local.kapinos.beans;
+package local.kapinos.beans.server;
 
 public interface _02_ExposingByInterfaceBean {
 

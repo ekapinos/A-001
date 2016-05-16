@@ -1,5 +1,6 @@
 package local.kapinos.config;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,19 +16,20 @@ import org.springframework.jmx.export.assembler.InterfaceBasedMBeanInfoAssembler
 import org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler;
 import org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler;
 import org.springframework.jmx.support.ConnectorServerFactoryBean;
+import org.springframework.jmx.support.MBeanServerConnectionFactoryBean;
 import org.springframework.remoting.rmi.RmiRegistryFactoryBean;
 
-import local.kapinos.beans._00_BeansMarkerInterface;
-import local.kapinos.beans._01_ExposingByMethodNamesBean;
-import local.kapinos.beans._02_ExposingByInterfaceBean;
-import local.kapinos.beans._03_ExposingByAnnotationsBean;
+import local.kapinos.beans.server._00_ServerBeansMarkerInterface;
+import local.kapinos.beans.server._01_ExposingByMethodNamesBean;
+import local.kapinos.beans.server._02_ExposingByInterfaceBean;
+import local.kapinos.beans.server._03_ExposingByAnnotationsBean;
 import local.kapinos.common.WaitAnyKeyBean;
 
 @Configuration
-@ComponentScan(basePackageClasses = _00_BeansMarkerInterface.class)
-public class SpringConfiguration {
+@ComponentScan(basePackageClasses = _00_ServerBeansMarkerInterface.class)
+public class ServerSpringConfiguration {
 
-	private Logger logger = LoggerFactory.getLogger(SpringConfiguration.class);
+	private Logger logger = LoggerFactory.getLogger(ServerSpringConfiguration.class);
 
 	@Bean
 	public MBeanExporter methodNameMbeanExporter(_01_ExposingByMethodNamesBean myBean) {
@@ -68,23 +70,32 @@ public class SpringConfiguration {
 		return exporter;
 	}
 
-	// Remote access
-	
-	@Bean
-	@DependsOn("rmiRegistryFB")
-	public ConnectorServerFactoryBean connectorServerFactoryBean() {
-		ConnectorServerFactoryBean connectorServerFactoryBean =  new ConnectorServerFactoryBean();
-		String serviceUrl = ConnectorServerFactoryBean.DEFAULT_SERVICE_URL; // "service:jmx:jmxmp://localhost:9875"
-		serviceUrl = "service:jmx:rmi://localhost/jndi/rmi://localhost:1099/spitter";
-		connectorServerFactoryBean.setServiceUrl(serviceUrl);
-		return connectorServerFactoryBean;
-	}
+	// Expose Remote JMX 
+
 	@Bean
 	public RmiRegistryFactoryBean rmiRegistryFB() {
 		RmiRegistryFactoryBean rmiRegistryFB = new RmiRegistryFactoryBean();
 		rmiRegistryFB.setPort(1099);
 		return rmiRegistryFB;
-		}
+	}
+	@Bean
+	@DependsOn("rmiRegistryFB")
+	public ConnectorServerFactoryBean connectorServerFactoryBean() {
+		ConnectorServerFactoryBean connectorServerFactoryBean = new ConnectorServerFactoryBean();
+		connectorServerFactoryBean.setServiceUrl(CommonSpringConfiguration.REMOTE_JMX_SERVICE_URL);
+		logger.info(CommonSpringConfiguration.REMOTE_JMX_SERVICE_URL);
+		return connectorServerFactoryBean;
+	}
+
+	// Connect to Remote JMX 
+	
+	@Bean
+	@DependsOn("connectorServerFactoryBean")
+	public MBeanServerConnectionFactoryBean connectionFactoryBean() throws MalformedURLException {
+		MBeanServerConnectionFactoryBean mbscfb = new MBeanServerConnectionFactoryBean();
+		mbscfb.setServiceUrl(CommonSpringConfiguration.REMOTE_JMX_SERVICE_URL);
+		return mbscfb;
+	}
 
 	@Bean
 	Object waitAnyKeyBean() {
