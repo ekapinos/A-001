@@ -2,15 +2,24 @@ package local.kapinos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 
-/**
- * 
- * Can't be run with 'Jetty Wabapp' eclipse plugin
- *
- */
 @SpringBootApplication
-public class Application {
+public class Application extends /*for WAR only*/ SpringBootServletInitializer  {
+	
+	/**
+	 * Allows run as JAR (embedded Tomcat)
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
+	}
+	
+	/**
+	 * Allows deploy as WAR
+	 */
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Application.class);
 	}
 }
